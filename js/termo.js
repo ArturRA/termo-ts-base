@@ -2,6 +2,7 @@ import AvaliacaoLetra from "./avaliacao-letra-enum.js";
 export class Termo {
     constructor() {
         this.palavraSecreta = '';
+        this.mensagemFinal = '';
         this.tentativas = 0;
         this.obterPalavraAleatoria();
     }
@@ -52,6 +53,8 @@ export class Termo {
                 avaliacoes[i] = AvaliacaoLetra.NaoExistente;
             }
         }
+        if (this.jogadorPerdeu())
+            this.mensagemFinal = `Você perdeu! Tente novamente, a palavra era ${this.palavraSecreta}`;
         return avaliacoes;
     }
     jogadorAcertou(palavra) {
@@ -63,6 +66,7 @@ export class Termo {
     resetarJogo() {
         this.obterPalavraAleatoria();
         this.tentativas = 0;
+        this.mensagemFinal = '';
     }
 }
 //# sourceMappingURL=termo.js.map
