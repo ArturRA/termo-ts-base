@@ -59,50 +59,66 @@ class TelaTermo {
   }
 
   avaliarPalavra(): void {
-      const palavra = this.grid[this.linhaAtual].map(cell => cell.textContent).join('');
-      const avaliacoes = this.jogoDoTermo.avaliar(palavra);
+    const palavra = this.grid[this.linhaAtual].map(cell => cell.textContent).join('');
+    const avaliacoes = this.jogoDoTermo.avaliar(palavra);
 
-      for (let i = 0; i < this.grid[this.linhaAtual].length; i++) {
-        this.atualizarBotoesPainel(this.grid[this.linhaAtual][i], avaliacoes[i]);
-      }
+    for (let i = 0; i < this.grid[this.linhaAtual].length; i++) {
+      this.atualizarBotoesPainel(this.grid[this.linhaAtual][i], avaliacoes[i]);
+    }
 
-      if (this.jogoDoTermo.jogadorAcertou(palavra) || this.jogoDoTermo.jogadorPerdeu()) {
-        this.disabilitarBotoes(true);
-        this.gameOver = true;
-        this.btnEnter.textContent = 'Jogar Novamente';
+    if (this.jogoDoTermo.jogadorAcertou(palavra) || this.jogoDoTermo.jogadorPerdeu()) {
+      this.finalizarJogo();
+      return;
+    }
 
-        return;
-      }
+    this.colunaAtual = 0;
+    this.linhaAtual++;
+  }
 
-      this.colunaAtual = 0;
-      this.linhaAtual++;
+  finalizarJogo(): void {
+    this.disabilitarBotoes(true);
+    this.gameOver = true;
+    this.btnEnter.textContent = 'Jogar Novamente';
+
+
+
+    if (this.jogoDoTermo.jogadorPerdeu()) {
+      const lblMensagemFinal: HTMLParagraphElement = document.createElement('p');
+
+      lblMensagemFinal.classList.add('notificacao');
+      lblMensagemFinal.classList.add('notificacao-erro');
+      lblMensagemFinal.textContent = this.jogoDoTermo.mensagemFinal;
+
+      this.pnlConteudo.appendChild(lblMensagemFinal);
+    }
   }
 
   resetarJogo(): void {
-      // Resetao grid
-      this.grid.forEach(linha => linha.forEach(cell => {
-        cell.textContent = '';
-        cell.style.backgroundColor = '';
-      }));
+    // Resetao grid
+    this.grid.forEach(linha => linha.forEach(cell => {
+      cell.textContent = '';
+      cell.style.backgroundColor = '';
+    }));
 
-      // Reseta o teclado
-      for (let botao of this.pnlTeclado.children) {
-        const botaoClicado = botao as HTMLButtonElement;
-        if (botaoClicado.id !== 'btnEnter')
-          botaoClicado.style.backgroundColor = '';
-      }
-      this.btnEnter.textContent = 'Enter';
+    // Reseta o teclado
+    for (let botao of this.pnlTeclado.children) {
+      const botaoClicado = botao as HTMLButtonElement;
+      if (botaoClicado.id !== 'btnEnter')
+        botaoClicado.style.backgroundColor = '';
+    }
+    this.btnEnter.textContent = 'Enter';
 
-      // Habilita o teclado de novo
-      this.disabilitarBotoes(false);
+    // Habilita o teclado de novo
+    this.disabilitarBotoes(false);
 
-      // Reseta as variaveis do jogo
-      this.linhaAtual = 0;
-      this.colunaAtual = 0;
-      this.gameOver = false;
+    // Reseta as variaveis do jogo
+    this.linhaAtual = 0;
+    this.colunaAtual = 0;
+    this.gameOver = false;
+    this.pnlConteudo.querySelector('.notificacao')?.remove();
 
-      // Reseta o a palavra secreta e as tentativas
-      this.jogoDoTermo.resetarJogo();
+    // Reseta o a palavra secreta e as tentativas
+    this.jogoDoTermo.resetarJogo();
   }
 
   atualizarBotoesPainel(cell: HTMLDivElement, avaliacao: AvaliacaoLetra): void {

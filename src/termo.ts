@@ -3,10 +3,12 @@ import AvaliacaoLetra from "./avaliacao-letra-enum.js";
 
 export class Termo {
   palavraSecreta: string;
+  mensagemFinal: string;
   tentativas: number;
 
   constructor() {
     this.palavraSecreta = '';
+    this.mensagemFinal = '';
     this.tentativas = 0;
     this.obterPalavraAleatoria();
   }
@@ -62,6 +64,9 @@ export class Termo {
       }
     }
 
+    if (this.jogadorPerdeu())
+      this.mensagemFinal = `Você perdeu! Tente novamente, a palavra era ${this.palavraSecreta}`;
+
     return avaliacoes;
   }
 
@@ -76,5 +81,6 @@ export class Termo {
   resetarJogo(): void {
     this.obterPalavraAleatoria();
     this.tentativas = 0;
+    this.mensagemFinal = '';
   }
 }

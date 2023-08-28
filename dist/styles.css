@@ -67,3 +67,12 @@ body {
 
   font-weight: 800;
 }
+
+.notificacao-erro {
+  border: 1px solid #d34343;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+
+  padding: 10px;
+}

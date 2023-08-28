@@ -45,15 +45,26 @@ class TelaTermo {
             this.atualizarBotoesPainel(this.grid[this.linhaAtual][i], avaliacoes[i]);
         }
         if (this.jogoDoTermo.jogadorAcertou(palavra) || this.jogoDoTermo.jogadorPerdeu()) {
-            this.disabilitarBotoes(true);
-            this.gameOver = true;
-            this.btnEnter.textContent = 'Jogar Novamente';
+            this.finalizarJogo();
             return;
         }
         this.colunaAtual = 0;
         this.linhaAtual++;
     }
+    finalizarJogo() {
+        this.disabilitarBotoes(true);
+        this.gameOver = true;
+        this.btnEnter.textContent = 'Jogar Novamente';
+        if (this.jogoDoTermo.jogadorPerdeu()) {
+            const lblMensagemFinal = document.createElement('p');
+            lblMensagemFinal.classList.add('notificacao');
+            lblMensagemFinal.classList.add('notificacao-erro');
+            lblMensagemFinal.textContent = this.jogoDoTermo.mensagemFinal;
+            this.pnlConteudo.appendChild(lblMensagemFinal);
+        }
+    }
     resetarJogo() {
+        var _a;
         // Resetao grid
         this.grid.forEach(linha => linha.forEach(cell => {
             cell.textContent = '';
@@ -72,6 +83,7 @@ class TelaTermo {
         this.linhaAtual = 0;
         this.colunaAtual = 0;
         this.gameOver = false;
+        (_a = this.pnlConteudo.querySelector('.notificacao')) === null || _a === void 0 ? void 0 : _a.remove();
         // Reseta o a palavra secreta e as tentativas
         this.jogoDoTermo.resetarJogo();
     }
