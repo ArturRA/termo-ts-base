@@ -33,7 +33,8 @@ class TelaTermo {
 
   registrarEventos(): void {
     for (let botao of this.pnlTeclado.children)
-      botao.addEventListener("click", (sender) => this.digitarLetra(sender));
+      if (botao.id !== 'btnEnter')
+        botao.addEventListener("click", (sender) => this.digitarLetra(sender));
 
     this.btnEnter.addEventListener("click", () => this.realizarAcaoDoEnter());
   }
