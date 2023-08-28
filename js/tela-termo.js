@@ -40,17 +40,19 @@ class TelaTermo {
         }
     }
     avaliarPalavra() {
-        const palavra = this.grid[this.linhaAtual].map(cell => cell.textContent).join('');
-        const avaliacoes = this.jogoDoTermo.avaliar(palavra);
-        for (let i = 0; i < this.grid[this.linhaAtual].length; i++) {
-            this.atualizarBotoesPainel(this.grid[this.linhaAtual][i], avaliacoes[i]);
+        const palavra = this.grid[this.linhaAtual].map(cell => cell.textContent).join('').trim();
+        if (palavra.length === 5) {
+            const avaliacoes = this.jogoDoTermo.avaliar(palavra);
+            for (let i = 0; i < this.grid[this.linhaAtual].length; i++) {
+                this.atualizarBotoesPainel(this.grid[this.linhaAtual][i], avaliacoes[i]);
+            }
+            if (this.jogoDoTermo.jogadorAcertou(palavra) || this.jogoDoTermo.jogadorPerdeu()) {
+                this.finalizarJogo();
+                return;
+            }
+            this.colunaAtual = 0;
+            this.linhaAtual++;
         }
-        if (this.jogoDoTermo.jogadorAcertou(palavra) || this.jogoDoTermo.jogadorPerdeu()) {
-            this.finalizarJogo();
-            return;
-        }
-        this.colunaAtual = 0;
-        this.linhaAtual++;
     }
     finalizarJogo() {
         this.disabilitarBotoes(true);
