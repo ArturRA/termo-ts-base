@@ -7,12 +7,24 @@
   <title>Termo TypeScript</title>
 
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
   <script type="module" src="js/tela-termo.js" defer></script>
 </head>
 
 <body>
   <div id="pnlConteudo" class="conteudo">
-    <h1>Termo</h1>
+    <div class="cabecalho">
+      <h1>Termo</h1>
+
+      <button id="btnExibirHistorico" class="btn-historico">
+        <span class="material-symbols-outlined">
+          monitoring
+        </span>
+        Estatísticas
+      </button>
+    </div>
 
     <!-- Grid Termo -->
     <div id="pnlTermo" class="grid-termo">
@@ -92,6 +104,63 @@
     </div>
 
     <!-- Notificacao -->
+    <div id="pnlNotificacao" class="container-notificacao">
+    </div>
+
+    <!-- Estatísticas -->
+    <div id="pnlHistorico" class="container-historico d-none">
+      <h2 class="titulo-historico">Histórico</h2>
+
+      <div class="grid-numeros">
+        <div class="coluna-numero">
+          <p id="lblJogos" class="header-numero">0</p>
+          <p class="descricao-numero">Jogos</p>
+        </div>
+
+        <div class="coluna-numero">
+          <p id="lblVitorias" class="header-numero">0</p>
+          <p class="descricao-numero">Vitórias</p>
+        </div>
+
+        <div class="coluna-numero">
+          <p id="lblDerrotas" class="header-numero">0</p>
+          <p class="descricao-numero">Derrotas</p>
+        </div>
+
+        <div class="coluna-numero">
+          <p id="lblSequencia" class="header-numero">0</p>
+          <p class="descricao-numero">Sequência</p>
+        </div>
+      </div>
+
+      <div class="grid-tentativas">
+        <div class="linha-tentativa">
+          <p class="indice-tentativa">0</p>
+          <p class="valor-tentativa">0</p>
+        </div>
+
+        <div class="linha-tentativa">
+          <p class="indice-tentativa">1</p>
+          <p class="valor-tentativa">0</p>
+        </div>
+
+        <div class="linha-tentativa">
+          <p class="indice-tentativa">2</p>
+          <p class="valor-tentativa">0</p>
+        </div>
+
+        <div class="linha-tentativa">
+          <p class="indice-tentativa">3</p>
+          <p class="valor-tentativa">0</p>
+        </div>
+
+        <div class="linha-tentativa">
+          <p class="indice-tentativa">4</p>
+          <p class="valor-tentativa">0</p>
+        </div>
+
+      </div>
+    </div>
   </div>
 </body>
 

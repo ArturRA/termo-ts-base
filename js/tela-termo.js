@@ -1,9 +1,11 @@
-import AvaliacaoLetra from "./avaliacao-letra-enum.js";
-import { Termo } from "./termo.js";
+import { AvaliacaoLetra } from "./dominio/avaliacao-letra-enum.js";
+import { Termo } from "./dominio/termo.js";
+import { LocalStorageService } from "./services/local-storage.service.js";
 class TelaTermo {
     constructor() {
         this.grid = [];
-        this.jogoDoTermo = new Termo();
+        this.localStorageService = new LocalStorageService();
+        this.jogoDoTermo = new Termo(this.localStorageService.carregarDados());
         this.gameOver = false;
         this.linhaAtual = 0;
         this.colunaAtual = 0;
@@ -15,13 +17,26 @@ class TelaTermo {
         });
         this.pnlTeclado = document.getElementById('pnlTeclado');
         this.btnEnter = document.getElementById('btnEnter');
+        this.pnlNotificacao = document.getElementById('pnlNotificacao');
+        this.pnlHistorico = document.getElementById('pnlHistorico');
+        this.btnExibirHistorico = document.getElementById('btnExibirHistorico');
         this.registrarEventos();
+        this.popularEstatisticas();
+        this.desenharGridTentativas();
     }
     registrarEventos() {
         for (let botao of this.pnlTeclado.children)
             if (botao.id !== 'btnEnter')
                 botao.addEventListener("click", (sender) => this.digitarLetra(sender));
         this.btnEnter.addEventListener("click", () => this.realizarAcaoDoEnter());
+        this.btnExibirHistorico.addEventListener('click', () => {
+            this.pnlHistorico.style.display = 'grid';
+        });
+        document.addEventListener('click', (event) => {
+            const target = event.target;
+            if (!this.pnlHistorico.contains(target) && event.target != this.btnExibirHistorico)
+                this.pnlHistorico.style.display = 'none';
+        });
     }
     digitarLetra(sender) {
         if (this.colunaAtual === 5)
@@ -65,6 +80,7 @@ class TelaTermo {
             lblMensagemFinal.textContent = this.jogoDoTermo.mensagemFinal;
             this.pnlConteudo.appendChild(lblMensagemFinal);
         }
+        this.atualizarHistorico();
     }
     resetarJogo() {
         var _a;
@@ -124,6 +140,37 @@ class TelaTermo {
             if (botaoClicado.id !== 'btnEnter')
                 botaoClicado.disabled = disabilitarBotoes;
         }
+    }
+    desenharGridTentativas() {
+        const elementos = Array.from(document.querySelectorAll('.valor-tentativa'));
+        const tentativas = this.jogoDoTermo.historico.tentativas;
+        for (let i = 0; i < tentativas.length; i++) {
+            const label = elementos[i];
+            const qtdTentativas = tentativas[i];
+            label.textContent = qtdTentativas.toString();
+            let tamanho = 0;
+            if (qtdTentativas > 0 && this.jogoDoTermo.historico.vitorias > 0)
+                tamanho = qtdTentativas / this.jogoDoTermo.historico.vitorias;
+            else
+                tamanho = 0.05;
+            const novoTamanho = tamanho * 100;
+            label.style.width = `${(novoTamanho).toString()}%`;
+        }
+    }
+    popularEstatisticas() {
+        const lblJogos = document.getElementById('lblJogos');
+        const lblVitorias = document.getElementById('lblVitorias');
+        const lblDerrotas = document.getElementById('lblDerrotas');
+        const lblSequencia = document.getElementById('lblSequencia');
+        lblJogos.textContent = this.jogoDoTermo.historico.jogos.toString();
+        lblVitorias.textContent = this.jogoDoTermo.historico.vitorias.toString();
+        lblDerrotas.textContent = this.jogoDoTermo.historico.derrotas.toString();
+        lblSequencia.textContent = this.jogoDoTermo.historico.sequencia.toString();
+    }
+    atualizarHistorico() {
+        this.localStorageService.salvarDados(this.jogoDoTermo.historico);
+        this.popularEstatisticas();
+        this.desenharGridTentativas();
     }
 }
 window.addEventListener('load', () => new TelaTermo());
