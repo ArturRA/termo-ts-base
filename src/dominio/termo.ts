@@ -1,15 +1,31 @@
-import AvaliacaoLetra from "./avaliacao-letra-enum.js";
+import { AvaliacaoLetra } from "./avaliacao-letra-enum.js";
+import { HistoricoUsuario } from "./historico-usuario.js";
 
 
 export class Termo {
   palavraSecreta: string;
   mensagemFinal: string;
-  tentativas: number;
+  private _tentativas: number;
 
-  constructor() {
+  private _historico: HistoricoUsuario;
+
+  get historico(): HistoricoUsuario {
+    return this._historico;
+  }
+
+  set historico(novo: HistoricoUsuario) {
+    this._historico = novo;
+  }
+
+  get tentativas(): number {
+    return this._tentativas;
+  }
+  
+  constructor(historico: HistoricoUsuario) {
     this.palavraSecreta = '';
     this.mensagemFinal = '';
-    this.tentativas = 0;
+    this._tentativas = 0;
+    this._historico = historico;
     this.obterPalavraAleatoria();
   }
 
@@ -50,7 +66,7 @@ export class Termo {
   }
 
   avaliar(palavra: string): AvaliacaoLetra[] {
-    this.tentativas++;
+    this._tentativas++;
 
     const avaliacoes: AvaliacaoLetra[] = [];
 
@@ -78,9 +94,27 @@ export class Termo {
     return this.tentativas === 5;
   }
 
+  registrarTentativa(): void {
+    this._tentativas++;
+  }
+
+  private registrarVitoria(): void {
+    this._historico.jogos++;
+    this._historico.vitorias++;
+    this._historico.sequencia++;
+
+    this._historico.tentativas[this._tentativas - 1]++;
+  }
+
+  private registrarDerrota(): void {
+    this._historico.jogos++;
+    this._historico.derrotas++;
+    this._historico.sequencia = 0;
+  }
+
   resetarJogo(): void {
     this.obterPalavraAleatoria();
-    this.tentativas = 0;
+    this._tentativas = 0;
     this.mensagemFinal = '';
   }
 }
