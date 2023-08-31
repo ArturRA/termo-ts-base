@@ -87,7 +87,15 @@ export class Termo {
   }
 
   jogadorAcertou(palavra: string): boolean {
-    return this.palavraSecreta === palavra;
+    const jogadorAcertou: boolean = palavra == this.palavraSecreta;
+
+    if (jogadorAcertou)
+      this.registrarVitoria();
+
+    else if (this.jogadorPerdeu())
+      this.registrarDerrota();
+    
+    return jogadorAcertou;
   }
 
   jogadorPerdeu(): boolean {
