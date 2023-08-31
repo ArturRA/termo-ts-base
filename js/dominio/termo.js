@@ -68,7 +68,12 @@ export class Termo {
         return avaliacoes;
     }
     jogadorAcertou(palavra) {
-        return this.palavraSecreta === palavra;
+        const jogadorAcertou = palavra == this.palavraSecreta;
+        if (jogadorAcertou)
+            this.registrarVitoria();
+        else if (this.jogadorPerdeu())
+            this.registrarDerrota();
+        return jogadorAcertou;
     }
     jogadorPerdeu() {
         return this.tentativas === 5;
